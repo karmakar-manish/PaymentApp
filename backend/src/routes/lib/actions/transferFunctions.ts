@@ -41,7 +41,7 @@ router.post("/getOnRampTxns", async(req: any, res: any)=>{
             })
         
             //sort based on time
-            txns.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+            txns.sort((a: {startTime: Date}, b: {startTime: Date}) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
           
 
             return res.json(
@@ -93,7 +93,7 @@ router.post("/getLockedBalance", async(req: any, res: any)=>{
             
             let lockedBalance = 0
         
-            user.map(t=>{
+            user.forEach(t=>{
                 if(t.status === "Processing")
                     lockedBalance = lockedBalance + t.amount
             })
@@ -137,7 +137,7 @@ router.post("/createOnRamptxn", async(req: any, res: any)=>{
             const txnToken = (Math.random()*1000).toString();
 
             //create an entry
-            const res = await client.onRampTransaction.create({
+            const txn = await client.onRampTransaction.create({
                 data: {
                     userId: decoded.id,
                     amount: amount * 100,
@@ -148,9 +148,9 @@ router.post("/createOnRamptxn", async(req: any, res: any)=>{
                 }
             })
 
-            return {
+            return req.json({
                 message: "On ramp transaction added!"
-            }
+            })
             
         }catch(err)
         {

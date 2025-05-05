@@ -65,11 +65,21 @@ export default function(){
         status: t.status,
         sign: (t.ToFrom==="Received")?"+":"-",
     }))
+
+    type CombinedTransaction = {
+        id: number
+        date: string
+        type: string
+        amount: number
+        status: string
+        sign: string
+      }
+
     //now store both the data in same place
-    const combinedData = [...mappedP2Pdata, ...onRampData]
+    const combinedData: CombinedTransaction[] = [...mappedP2Pdata, ...onRampData]
    
     //sort based on time
-    combinedData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    combinedData.sort((a: CombinedTransaction, b: CombinedTransaction) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     let totalsent=0, totalReceived=0, successfullCount=0, pendingCount=0;
     

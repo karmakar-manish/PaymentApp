@@ -39,7 +39,7 @@ router.post("/getTxns", async(req: any, res:any)=>{
             }
         })
         //sort the txns based on time
-        txns.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+        txns.sort((a: {timestamp: Date},b: {timestamp: Date}) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
         
         return res.json(
