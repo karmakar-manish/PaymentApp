@@ -75,7 +75,7 @@ router.post("/phonePassword", async(req: any,res: any)=>{
     res.cookie("token", token, {
         httpOnly: true, // Prevents JavaScript from accessing the cookie
         sameSite: "none",    //cross-site post/put/delete/fetch not allowed from different origin
-        secure: false,
+        secure: true,
         maxAge: 24*60*60*1000,   //1 day
         // path: "/"
     })
@@ -126,7 +126,7 @@ router.post("/providerLogin", async(req:any, res:any)=>{
             res.cookie("token", token, {
                 httpOnly: true, // Prevents JavaScript from accessing the cookie
                 sameSite: "none",    //cross-site post/put/delete/fetch not allowed from different origin
-                secure: false,
+                secure: true,
                 maxAge: 24*60*60*1000,   //1 day
                 // path: "/"
             })

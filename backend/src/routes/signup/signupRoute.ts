@@ -51,7 +51,7 @@ router.post("/phonePassword", async(req: any, res:any)=>{
        //create cookie
         res.cookie("token", token, {
             httpOnly: true, // Prevents JavaScript from accessing the cookie
-            sameSite: "lax",    //cross-site post/put/delete/fetch not allowed from different origin
+            sameSite: "none",    //cross-site post/put/delete/fetch not allowed from different origin
             secure: true,
             maxAge: 24*60*60*1000,   //1 day
             // path: "/"
