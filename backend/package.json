@@ -25,7 +25,9 @@
     "express": "^5.1.0",
     "firebase": "^11.6.1",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.7.0",
     "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "prisma": "^6.7.0"
   }
 }
