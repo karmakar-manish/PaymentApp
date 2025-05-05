@@ -44,6 +44,7 @@ CREATE TABLE "User" (
     "name" TEXT,
     "number" TEXT,
     "password" TEXT,
+    "uid" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
