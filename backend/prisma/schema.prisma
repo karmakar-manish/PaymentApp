@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Balance {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  amount Int
+  locked Int
+  User   User @relation(fields: [userId], references: [id])
+}
+
+model Merchant {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  auth_type AuthType
+}
+
+model OnRampTransaction {
+  id        Int          @id @default(autoincrement())
+  status    OnRampStatus
+  token     String       @unique
+  provider  String
+  amount    Int
+  startTime DateTime
+  userId    Int
+  User      User         @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id                                       Int                 @id @default(autoincrement())
+  email                                    String?             @unique
+  name                                     String?
+  number                                   String?             @unique
+  password                                 String?
+  uid                                      String?
+  Balance                                  Balance?
+  OnRampTransaction                        OnRampTransaction[]
+  p2pTransfer_p2pTransfer_fromUserIdToUser p2pTransfer[]       @relation("p2pTransfer_fromUserIdToUser")
+  p2pTransfer_p2pTransfer_toUserIdToUser   p2pTransfer[]       @relation("p2pTransfer_toUserIdToUser")
+}
+
+model p2pTransfer {
+  id                                Int      @id @default(autoincrement())
+  amount                            Int
+  timestamp                         DateTime
+  fromUserId                        Int
+  toUserId                          Int
+  User_p2pTransfer_fromUserIdToUser User     @relation("p2pTransfer_fromUserIdToUser", fields: [fromUserId], references: [id])
+  User_p2pTransfer_toUserIdToUser   User     @relation("p2pTransfer_toUserIdToUser", fields: [toUserId], references: [id])
+}
+
+enum AuthType {
+  Google
+  Github
+}
+
+enum OnRampStatus {
+  Success
+  Failure
+  Processing
+}

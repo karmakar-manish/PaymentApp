@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/routes/index.ts","./src/routes/auth/verifytoken.ts","./src/routes/lib/actions/dashboardfunctions.ts","./src/routes/lib/actions/p2ptransferfunctions.ts","./src/routes/lib/actions/transactionfunctions.ts","./src/routes/lib/actions/transferfunctions.ts","./src/routes/signin/signinroute.ts","./src/routes/signup/signuproute.ts"],"version":"5.8.3"}
