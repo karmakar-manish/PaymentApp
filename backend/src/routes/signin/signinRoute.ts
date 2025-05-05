@@ -1,9 +1,9 @@
 import express from "express"
-import zod, { number } from "zod"
+import zod from "zod"
 import { PrismaClient } from "@prisma/client"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
-import { toFormData } from "axios";
+
 dotenv.config(); // Loads variables from .env into process.env
 
 const router = express.Router()

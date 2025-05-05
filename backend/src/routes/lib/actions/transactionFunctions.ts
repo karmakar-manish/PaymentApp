@@ -2,7 +2,6 @@ import express from "express"
 import { PrismaClient } from "@prisma/client"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
-import { Data } from "hono/dist/types/context";
 dotenv.config(); // Loads variables from .env into process.env
 
 const router = express.Router()

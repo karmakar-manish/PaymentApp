@@ -1,5 +1,5 @@
 import express from "express"
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, Prisma } from "@prisma/client"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
 dotenv.config(); // Loads variables from .env into process.env
@@ -118,7 +118,7 @@ router.post("/transfer", async(req: any, res:any)=>{
         }
     
         //create a trasaction to maintain atomicity
-        await client.$transaction(async (tx) => {
+        await client.$transaction(async (tx: Prisma.TransactionClient) => {
             //we need to make sure only one db call is done here (LOCK)
             // Locks the selected row so that no one else can modify it until this transaction commits or rolls back.
             await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId"=${Number(senderId)} FOR UPDATE`;

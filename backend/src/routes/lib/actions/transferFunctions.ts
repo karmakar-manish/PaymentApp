@@ -45,7 +45,12 @@ router.post("/getOnRampTxns", async(req: any, res: any)=>{
           
 
             return res.json(
-                txns.map(t => ({
+                txns.map((t: {
+                    startTime: Date,
+                    amount: number,
+                    status: string,
+                    provider: string,
+                }) => ({
                   time: t.startTime,
                   amount: t.amount,
                   status: t.status,
@@ -148,7 +153,7 @@ router.post("/createOnRamptxn", async(req: any, res: any)=>{
                 }
             })
 
-            return req.json({
+            return res.json({
                 message: "On ramp transaction added!"
             })
             
