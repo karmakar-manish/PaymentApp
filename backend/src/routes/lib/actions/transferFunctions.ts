@@ -98,7 +98,10 @@ router.post("/getLockedBalance", async(req: any, res: any)=>{
             
             let lockedBalance = 0
         
-            user.forEach(t=>{
+            user.forEach((t: {
+                status: string,
+                amount: number
+            })=>{
                 if(t.status === "Processing")
                     lockedBalance = lockedBalance + t.amount
             })
