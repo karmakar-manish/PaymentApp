@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { BACKEND_URL } from "../confit"
 
 type getUserBalanceType = {
     id: number
@@ -25,7 +26,7 @@ export default function(){
     useEffect(()=>{
         async function getUserBalance(){
             try{
-                const res = await axios.post<getUserBalanceType[]>("http://localhost:3000/api/v1/user/transactions/getUserBalance", {
+                const res = await axios.post<getUserBalanceType[]>(`${BACKEND_URL}/api/v1/user/transactions/getUserBalance`, {
 
                 }, {
                     withCredentials: true
@@ -40,7 +41,7 @@ export default function(){
 
         async function getOnRampData(){
             try{
-                const res = await axios.post<onRampTxnsType[]>("http://localhost:3000/api/v1/user/transactions/getOnRampData", {
+                const res = await axios.post<onRampTxnsType[]>(`${BACKEND_URL}/api/v1/user/transactions/getOnRampData`, {
 
                 }, {
                     withCredentials: true

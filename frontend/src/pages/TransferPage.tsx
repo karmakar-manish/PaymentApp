@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { AddMoney } from "../components/AddMoneyCard"
 import BalanceCard from "../components/BalanceCard"
 import OnRampTransactions from "../components/OnRampTxnsComponent"
+import { BACKEND_URL } from "../confit"
 
 type BalanceResponse = {
     balance: number
@@ -27,7 +28,7 @@ export default function(){
         //function to get the balance of the currently logged in user
         async function fetchBalance(){
             try{
-                const response = await axios.post<BalanceResponse>("http://localhost:3000/api/v1/user/dashboard/getBalance",
+                const response = await axios.post<BalanceResponse>(`${BACKEND_URL}/api/v1/user/dashboard/getBalance`,
                     {}, //body
                     {
                         withCredentials: true   //required to send cookie
@@ -45,7 +46,7 @@ export default function(){
         //function to fetch the onRampTxns of the user
         async function getOnRampTxns(){
             try{
-                const response = await axios.post<onRampTxnType[]>("http://localhost:3000/api/v1/user/transfer/getOnRampTxns",
+                const response = await axios.post<onRampTxnType[]>(`${BACKEND_URL}/api/v1/user/transfer/getOnRampTxns`,
                     {}, //body
                     {
                         withCredentials: true   //required to send cookie
@@ -61,7 +62,7 @@ export default function(){
         //function to fetch the locked balance of the user
         async function getLockedBalance(){
             try{
-                const response = await axios.post<LockedBalanceType>("http://localhost:3000/api/v1/user/transfer/getLockedBalance",
+                const response = await axios.post<LockedBalanceType>(`${BACKEND_URL}/api/v1/user/transfer/getLockedBalance`,
                     {}, //body
                     {
                         withCredentials: true   //required to send cookie

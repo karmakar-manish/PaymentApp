@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { BACKEND_URL } from "../confit"
 
 interface BalanceResponse {
     balance: number
@@ -19,7 +20,7 @@ export default function(){
     useEffect(()=>{
         async function fetchBalance(){
             try{
-                const response = await axios.post<BalanceResponse>("http://localhost:3000/api/v1/user/dashboard/getBalance",
+                const response = await axios.post<BalanceResponse>(`${BACKEND_URL}/api/v1/user/dashboard/getBalance`,
                     {}, //body
                     {
                         withCredentials: true   //required to send cookie
@@ -35,7 +36,7 @@ export default function(){
         }   
         async function fetchOnRampCount(){
             try{
-                const response = await axios.post<onRampCountResponse>("http://localhost:3000/api/v1/user/dashboard/getOnRampTxns",
+                const response = await axios.post<onRampCountResponse>(`${BACKEND_URL}/api/v1/user/dashboard/getOnRampTxns`,
                     {}, //body
                     {
                         withCredentials: true   //required to send cookie
@@ -49,7 +50,7 @@ export default function(){
         }   
         async function fetchP2pCount(){
             try{
-                const response = await axios.post<p2pCountResponse>("http://localhost:3000/api/v1/user/dashboard/p2pTransferCount",
+                const response = await axios.post<p2pCountResponse>(`${BACKEND_URL}/api/v1/user/dashboard/p2pTransferCount`,
                     {}, //body
                     {
                         withCredentials: true   //required to send cookie

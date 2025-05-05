@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SideBarItem from "./SideBarItem";
 import { Outlet, Navigate, useLocation} from "react-router-dom";
 import axios from "axios";
+import { BACKEND_URL } from "../confit";
 
 export default function LayoutAfterSignin() {
   const [loading, setLoading] = useState(true)
@@ -11,7 +12,7 @@ export default function LayoutAfterSignin() {
   useEffect(()=>{
     async function verify(){
       try{
-        await axios.get("http://localhost:3000/api/v1/verify", {
+        await axios.get(`${BACKEND_URL}/api/v1/verify`, {
           withCredentials: true
         })
         

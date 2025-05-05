@@ -4,6 +4,7 @@ import TextInputComponent from "./TextInputComponent"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import { BACKEND_URL } from "../confit"
 
 const SUPPORTED_BANKS = [{
     name: "HDFC Bank",
@@ -38,7 +39,7 @@ export function AddMoney(){
             />
             <div className="text-center">
                 <ButtonComponent onClick={async ()=>{
-                    axios.post("http://localhost:3000/api/v1/user/transfer/createOnRamptxn", {
+                    axios.post(`${BACKEND_URL}/api/v1/user/transfer/createOnRamptxn`, {
                         amount: amount,
                         provider: provider
                     }, {

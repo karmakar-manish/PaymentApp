@@ -5,6 +5,7 @@ import { signInWithPopup } from "firebase/auth";
 import axios from "axios";
 import googleImg from "../assets/google.png"
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../confit";
 
 
 export default function (){
@@ -22,7 +23,7 @@ export default function (){
             e.preventDefault()
 
             try{
-                await axios.post("http://localhost:3000/api/v1/signinRoute/phonePassword", {
+                await axios.post(`${BACKEND_URL}/api/v1/signinRoute/phonePassword`, {
                     number, 
                     password
                 })
@@ -52,7 +53,7 @@ export default function (){
             signInWithPopup(auth, provider)
                 .then(async(res)=>{
                     try{
-                        await axios.post("http://localhost:3000/api/v1/signinRoute/providerLogin", {
+                        await axios.post(`${BACKEND_URL}/api/v1/signinRoute/providerLogin`, {
                             uid: res.user.uid,
                             email: res.user.email,
                             displayName: res.user.displayName
@@ -62,7 +63,7 @@ export default function (){
                         
                     }catch(err){
                         //auto signup the user
-                        await axios.post("http://localhost:3000/api/v1/signupRoute/providerSignup", {
+                        await axios.post(`${BACKEND_URL}/api/v1/signupRoute/providerSignup`, {
                             uid: res.user.uid,
                             email: res.user.email,
                             displayName: res.user.displayName

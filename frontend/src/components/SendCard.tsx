@@ -3,6 +3,7 @@ import TextInputComponent from "./TextInputComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BACKEND_URL } from "../confit";
 
 export default function(){
     const [number, setNumber] = useState(0)
@@ -24,7 +25,7 @@ export default function(){
                         <div className="text-center mt-4">
                             <ButtonComponent onClick={async()=>{
                                 try{
-                                    await axios.post("http://localhost:3000/api/v1/user/p2pTransfer/transfer",{
+                                    await axios.post(`${BACKEND_URL}/api/v1/user/p2pTransfer/transfer`,{
                                         receiverNum: number,
                                         amount: amount
                                     }, {

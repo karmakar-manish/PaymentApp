@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import SendCard from "../components/SendCard"
 import P2pTransactions from "../components/P2pTransactions"
+import { BACKEND_URL } from "../confit"
 
 type p2pTransactionSchema = {
     id: number,
@@ -17,7 +18,7 @@ export default function(){
     useEffect(()=>{
         async function getP2pTxns(){
             try{
-                const res = await axios.post<p2pTransactionSchema[]>("http://localhost:3000/api/v1/user/p2pTransfer/getTxns", 
+                const res = await axios.post<p2pTransactionSchema[]>(`${BACKEND_URL}/api/v1/user/p2pTransfer/getTxns`, 
                     {},
                     {
                         withCredentials: true //for cookies
