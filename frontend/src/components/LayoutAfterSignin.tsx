@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SideBarItem from "./SideBarItem";
 import { Outlet, Navigate, useLocation} from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL } from "../confit";
+import { BACKEND_URL } from "../config";
 
 export default function LayoutAfterSignin() {
   const [loading, setLoading] = useState(true)

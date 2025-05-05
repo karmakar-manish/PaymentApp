@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { AddMoney } from "../components/AddMoneyCard"
 import BalanceCard from "../components/BalanceCard"
 import OnRampTransactions from "../components/OnRampTxnsComponent"
-import { BACKEND_URL } from "../confit"
+import { BACKEND_URL } from "../config"
 
 type BalanceResponse = {
     balance: number

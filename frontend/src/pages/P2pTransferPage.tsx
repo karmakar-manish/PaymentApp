@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import SendCard from "../components/SendCard"
 import P2pTransactions from "../components/P2pTransactions"
-import { BACKEND_URL } from "../confit"
+import { BACKEND_URL } from "../config"
 
 type p2pTransactionSchema = {
     id: number,

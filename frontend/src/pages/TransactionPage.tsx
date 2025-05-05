@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { BACKEND_URL } from "../confit"
+import { BACKEND_URL } from "../config"
 
 type getUserBalanceType = {
     id: number

@@ -5,7 +5,7 @@ import { signInWithPopup } from "firebase/auth";
 import axios from "axios";
 import googleImg from "../assets/google.png"
 import { useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "../confit";
+import { BACKEND_URL } from "../config";
 
 
 export default function (){

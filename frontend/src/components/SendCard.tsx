@@ -3,7 +3,7 @@ import TextInputComponent from "./TextInputComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL } from "../confit";
+import { BACKEND_URL } from "../config";
 
 export default function(){
     const [number, setNumber] = useState(0)
