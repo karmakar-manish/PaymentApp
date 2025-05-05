@@ -14,7 +14,7 @@ const SUPPORTED_BANKS = [{
 }]
 
 export function AddMoney(){
-    const [redirectURL, setRedirectURL] = useState(SUPPORTED_BANKS[0]?.redirectURL)
+    const [, setRedirectURL] = useState(SUPPORTED_BANKS[0]?.redirectURL)
     const [amount, setAmount] = useState("")
     const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name)
     const navigate = useNavigate()
