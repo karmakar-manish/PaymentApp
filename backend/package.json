@@ -28,6 +28,8 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "prisma": "^6.7.0"
+    "@types/node": "^22.15.3",
+    "prisma": "^6.7.0",
+    "ts-node": "^10.9.2"
   }
 }
