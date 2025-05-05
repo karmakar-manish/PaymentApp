@@ -43,7 +43,12 @@ router.post("/getTxns", async(req: any, res:any)=>{
 
         
         return res.json(
-            txns.map(t=>({
+            txns.map((t: {
+                id: number,
+                timestamp: Date,
+                amount: number,
+                toUserId: number
+            })=>({
                 id: t.id,
                 time: t.timestamp,
                 type: "P2P Transfer",

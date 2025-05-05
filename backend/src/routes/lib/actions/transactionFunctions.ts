@@ -2,6 +2,7 @@ import express from "express"
 import { PrismaClient } from "@prisma/client"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
+import { Data } from "hono/dist/types/context";
 dotenv.config(); // Loads variables from .env into process.env
 
 const router = express.Router()
@@ -46,7 +47,12 @@ router.post("/getUserBalance", async(req: any, res: any)=>{
             txns.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
             
             return res.json(
-                txns.map(t=>({
+                txns.map((t: {
+                    id:number,
+                    timestamp: Date,
+                    amount: number,
+                    toUserId: number
+                })=>({
                     id: t.id,
                     time: t.timestamp,
                     type: "P2P Transfer",
@@ -95,7 +101,12 @@ router.post("/getOnRampData", async(req: any, res: any)=>{
           
     
             return res.json(
-                data.map(t=>({
+                data.map((t: {
+                    id: number,
+                    startTime: Date,
+                    amount: number,
+                    status: string
+                })=>({
                     id: t.id,
                     date: t.startTime,
                     type: "Wallet Top-up",
