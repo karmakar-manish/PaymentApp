@@ -3,6 +3,7 @@ import SideBarItem from "./SideBarItem";
 import { Outlet, Navigate, useLocation} from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { AppbarClient } from "./AppbarClient";
 
 export default function LayoutAfterSignin() {
   const [loading, setLoading] = useState(true)
@@ -39,6 +40,7 @@ export default function LayoutAfterSignin() {
     }
     
     return <div className="">
+        <AppbarClient/>
         <div className="flex">
             <div className="w-60 border-r border-slate-300 min-h-screen mr-4 pt-27 bg-[#e1dbf0]">
                 <div className="p-2 pl-5 gap-2 flex flex-col">

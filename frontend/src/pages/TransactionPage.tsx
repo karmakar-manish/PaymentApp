@@ -120,7 +120,7 @@ export default function(){
                             <div>Status</div>
                         </div>
                         <div className="h-120 overflow-x-auto">
-                            {combinedData.map(t=>(<TransactionComponent key={t.id} data={t}/>))}
+                            {combinedData.map((t, ind)=>(<TransactionComponent key={ind} data={t}/>))}
                         </div>
                     </div>
                 </div>

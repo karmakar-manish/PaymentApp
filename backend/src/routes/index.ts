@@ -6,6 +6,7 @@ import verifyToken from "./auth/verifyToken"
 import p2pTransferFunctions from "./lib/actions/p2pTransferFunctions"
 import transactionFunctions from "./lib/actions/transactionFunctions"
 import transferFunctions from "./lib/actions/transferFunctions"
+import logout from "./logout/logoutRoute"
 
 const router = express.Router()
 
@@ -15,6 +16,7 @@ router.use("/user/dashboard", dashboardRoute)
 router.use("/user/p2pTransfer", p2pTransferFunctions)
 router.use("/user/transactions", transactionFunctions)
 router.use("/user/transfer", transferFunctions)
+router.use("/user/logout", logout)
 router.use("/verify", verifyToken)
 
 export default router;
