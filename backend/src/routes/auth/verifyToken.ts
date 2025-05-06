@@ -1,34 +1,37 @@
-import express from "express"
-import jwt from "jsonwebtoken"
-const router = express.Router()
-const JWT_SECRET = process.env.JWT_SECRET || ""
+import { Hono } from "hono";
+import {sign, verify} from "hono/jwt"
+import { getCookie } from "hono/cookie"
+import { env } from "hono/adapter"
 
-interface JwtPayload{
-    id: number,
-    name: string | null,
-    email: string | null
-}
+export const verifyRoute = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string
+    }
+}> ()
 
-router.get("/", (req:any, res:any)=>{
-    const token = req.cookies.token;
+
+verifyRoute.get("/", async(c)=>{
+    const JWT_SECRET = env(c).JWT_SECRET || "";
+    const token = getCookie(c, "token")
+
     if(!token)
     {
-        return res.status(401).json({
+        return c.json({
             message: "Unauthorized!"
-        })
+        }, 401)
     }
     try{
-        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload
-        return res.json({
+        const decoded = await verify(token, JWT_SECRET) 
+        
+        return c.json({
             status: "ok",
             user: decoded
         })
     }catch(err)
     {   
-        return res.status(403).json({
+        return c.json({
             message: "Invalid token!"
-        })
+        }, 403)
     }
 })
-
-export default router

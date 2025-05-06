@@ -1,22 +1,28 @@
-import express from "express"
-const router = express.Router()
+import { Hono } from "hono";
 
-//function to get all the p2pTransfer details of the user
-router.post("/clearCookie", async(req: any, res:any)=>{
+export const logoutRoute = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string
+    }
+}> ()
+
+
+//route to logout the user to the signin page
+logoutRoute.post("/clearCookie", async(c)=>{
     
     //clear the cookie
-    res.clearCookie("token", {
-        httpOnly: true, // Prevents JavaScript from accessing the cookie
-        sameSite: "none",    //cross-site post/put/delete/fetch not allowed from different origin
-        secure: true,
-        maxAge: 24*60*60*1000   //1 day
-    })
+    c.header("Set-Cookie", 
+        `token=;
+        HttpOnly;
+        Path=/;
+        Max-Age=0;
+        SameSite=None;
+        Secure`
+    )
 
-    console.log("Cookie cleared");
 
-    return res.json({
+    return c.json({
         message: "Logged out!"
     })
 })
-
-export default router;

@@ -1,22 +1,27 @@
-import express from "express"
-import signInRoute from "./signin/signinRoute"
-import signUpRoute from "./signup/signupRoute"
-import dashboardRoute from "./lib/actions/dashboardFunctions"
-import verifyToken from "./auth/verifyToken"
-import p2pTransferFunctions from "./lib/actions/p2pTransferFunctions"
-import transactionFunctions from "./lib/actions/transactionFunctions"
-import transferFunctions from "./lib/actions/transferFunctions"
-import logout from "./logout/logoutRoute"
+import { signInRoute } from "./signin/signinRoute"
+import { signUpRoute } from "./signup/signupRoute"
+import { verifyRoute } from "./auth/verifyToken"
+import { dashboardRoute } from "./lib/dashboardFunctions"
+import { p2pTransferRoute } from "./lib/p2pTransferFunctions"
+import { transactionRoute } from "./lib/transactionFunctions"
+import { transferRoute } from "./lib/transferFunctions"
+import { logoutRoute } from "./logout/logoutRoute"
+import { Hono } from "hono"
 
-const router = express.Router()
+export const mainRoute = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string
+    }
+}> ()
 
-router.use("/signinRoute", signInRoute)
-router.use("/signupRoute", signUpRoute)
-router.use("/user/dashboard", dashboardRoute)
-router.use("/user/p2pTransfer", p2pTransferFunctions)
-router.use("/user/transactions", transactionFunctions)
-router.use("/user/transfer", transferFunctions)
-router.use("/user/logout", logout)
-router.use("/verify", verifyToken)
 
-export default router;
+mainRoute.route("/signinRoute", signInRoute)
+mainRoute.route("/signupRoute", signUpRoute)
+mainRoute.route("/verify", verifyRoute)
+mainRoute.route("/user/dashboard", dashboardRoute)
+mainRoute.route("user/p2pTransfer", p2pTransferRoute)
+mainRoute.route("/user/transactions", transactionRoute)
+mainRoute.route("/user/transfer", transferRoute)
+mainRoute.route("/user/logout", logoutRoute)
+

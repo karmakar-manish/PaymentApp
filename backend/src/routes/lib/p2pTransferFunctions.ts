@@ -1,29 +1,39 @@
-import express from "express"
-import { PrismaClient, Prisma } from "@prisma/client"
-import jwt from "jsonwebtoken"
-import dotenv from "dotenv";
-dotenv.config(); // Loads variables from .env into process.env
+import { Hono } from "hono"
+import { Prisma, PrismaClient } from "@prisma/client/edge"
+import { withAccelerate } from "@prisma/extension-accelerate"
+import {sign, verify} from "hono/jwt"
+import { env } from "hono/adapter"
+import { getCookie } from "hono/cookie"
 
-const router = express.Router()
-const client = new PrismaClient()
-const JWT_SECRET = process.env.JWT_SECRET || ""
+export const p2pTransferRoute = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string
+    }
+}> ()
 
 //function to get all the p2pTransfer details of the user
-router.post("/getTxns", async(req: any, res:any)=>{
+p2pTransferRoute.post("/getTxns", async(c)=>{
     
+    //prisma client
+    const client = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
     //get the token from the cookie
-    const token = req.cookies.token
+    const token = getCookie(c, "token")
+    const JWT_SECRET = env(c).JWT_SECRET || "";
     
     //incase of no token
     if(!token)
     {
-        return res.status(401).json({
+        return c.json({
             error: "Not authenticated!"
-        })
+        }, 401)
     }
 
     try{
-        const decoded = jwt.verify(token, JWT_SECRET) as{
+        const decoded = await verify(token, JWT_SECRET) as{
             id: number,
             name: string | null,
             email: string | null
@@ -42,7 +52,7 @@ router.post("/getTxns", async(req: any, res:any)=>{
         txns.sort((a: {timestamp: Date},b: {timestamp: Date}) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
         
-        return res.json(
+        return c.json(
             txns.map((t: {
                 id: number,
                 timestamp: Date,
@@ -61,45 +71,53 @@ router.post("/getTxns", async(req: any, res:any)=>{
 
     }catch(err)
     {
-        return res.status(403).json({
+        return c.json({
             message: "Invalid token",
             error: err
-        })
+        }, 401)
     }
 })
 
 
-router.post("/transfer", async(req: any, res:any)=>{
+p2pTransferRoute.post("/transfer", async(c)=>{
     
+    //prisma client
+    const client = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
     //get the token from the cookie
-    const token = req.cookies.token
+    const token = getCookie(c, "token")
+    const JWT_SECRET = env(c).JWT_SECRET || "";
     
     //incase of no token
     if(!token)
     {
-        return res.status(401).json({
+        return c.json({
             error: "Not authenticated!"
-        })
+        }, 401)
     }
 
     try{
-        const decoded = jwt.verify(token, JWT_SECRET) as{
+        const decoded = await verify(token, JWT_SECRET) as{
             id: number,
             name: string | null,
             email: string | null
         }
         
+        const body = await c.req.json()
+
         const senderId = decoded.id
-        const receiverNum = req.body.receiverNum
-        const amount = req.body.amount
+        const receiverNum = body.receiverNum
+        const amount = body.amount
 
         //incase no sender is found
         if(!senderId)
         {
             console.log("Invalid sender number!");
-            return res.error({
+            return c.json({
                 message: "Invalid sender number!"
-            })
+            }, 400)
         }
 
         const receiver = await client.user.findFirst({
@@ -112,9 +130,9 @@ router.post("/transfer", async(req: any, res:any)=>{
         if(!receiver)
         {
             console.log("Receiver not found!");
-            return res.error({
+            return c.json({
                 message: "Receiver not found!"
-            })
+            }, 400)
         }
     
         //create a trasaction to maintain atomicity
@@ -140,9 +158,9 @@ router.post("/transfer", async(req: any, res:any)=>{
             if(!senderBalance || senderBalance.amount < amount)
             {
                 console.log("Insufficient balance");
-                return res.error({
+                return c.json({
                     message: "Insufficient balance"
-                })
+                }, 400)
             }
 
             //reduce the balance of the sender
@@ -179,16 +197,15 @@ router.post("/transfer", async(req: any, res:any)=>{
                 }
             })
         })
-        return res.json({
+        return c.json({
             message:"Money sent successfully!"
         })
 
         }catch(err)
         {
-            return res.status(403).json({
+            return c.json({
                 message: "Invalid token",
                 error: err
-            })
+            }, 403)
         }
 })
-export default router

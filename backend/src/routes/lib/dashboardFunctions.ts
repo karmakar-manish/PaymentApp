@@ -1,36 +1,48 @@
-import express from "express"
-import { PrismaClient } from "@prisma/client"
-import jwt from "jsonwebtoken"
-import dotenv from "dotenv";
-dotenv.config(); // Loads variables from .env into process.env
-
-const router = express.Router()
-const client = new PrismaClient()
-const JWT_SECRET = process.env.JWT_SECRET || ""
+import { Hono } from "hono"
+import { PrismaClient } from "@prisma/client/edge"
+import { withAccelerate } from "@prisma/extension-accelerate"
+import {sign, verify} from "hono/jwt"
+import { env } from "hono/adapter"
+import { getCookie } from "hono/cookie"
 
 
+export const dashboardRoute = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string
+    }
+}> ()
 
-router.get("/", (req: any,res: any)=>{
-    return res.json({
-        msg: "hi there"
+
+
+dashboardRoute.get("/", (c)=>{
+    return c.json({
+        msg: "hi there from dashboard"
     })
 })
+
 //function to get the balance of the current logged in user
-router.post("/getBalance", async(req: any, res:any)=>{
+dashboardRoute.post("/getBalance", async(c)=>{
     
+    //prisma client
+    const client = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
     //get the token from the cookie
-    const token = req.cookies.token
-    
+    const token = getCookie(c, "token")
+    const JWT_SECRET = env(c).JWT_SECRET || "";
+
     //incase of no token
     if(!token)
     {
-        return res.status(401).json({
+        return c.json({
             error: "Not authenticated!"
-        })
+        }, 401)
     }
 
     try{
-        const decoded = jwt.verify(token, JWT_SECRET) as{
+        const decoded = await verify(token, JWT_SECRET) as{
             id: number,
             name: string | null,
             email: string | null
@@ -45,39 +57,45 @@ router.post("/getBalance", async(req: any, res:any)=>{
         
         if(!balance)
         {
-            return res.status(403).json({
+            return c.json({
                 message: "Invalid user id"
-            })
+            }, 403)
         }
-        return res.json({
+        return c.json({
             balance: balance.amount
         })
 
     }catch(err)
     {
-        return res.status(403).json({
+        return c.json({
             message: "Invalid token",
             error: err
-        })
+        }, 403)
     }
 })
 
 
 //function to get the count of onRampTransactions by the user
-router.post("/getOnRampTxns", async(req: any, res:any)=>{
+dashboardRoute.post("/getOnRampTxns", async(c)=>{
     //get the token from the cookie
-    const token = req.cookies.token
-    
+    const token = getCookie(c, "token")
+    const JWT_SECRET = env(c).JWT_SECRET || "";
+
+    //prisma client
+    const client = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
     //incase of no token
     if(!token)
     {
-        return res.status(401).json({
+        return c.json({
             error: "Not authenticated!"
-        })
+        }, 401)
     }
 
     try{
-        const decoded = jwt.verify(token, JWT_SECRET) as{
+        const decoded = await verify(token, JWT_SECRET) as{
             id: number,
             name: string | null,
             email: string | null
@@ -92,37 +110,44 @@ router.post("/getOnRampTxns", async(req: any, res:any)=>{
         
         if(!onRamp)
         {
-            return res.status(403).json({
+            return c.json({
                 message: "Invalid user id"
-            })
+            }, 403)
         }
-        return res.json({
+        return c.json({
             txnCount: onRamp.length
         })
     }catch(err)
     {
-        return res.status(403).json({
+        return c.json({
             message: "Invalid token",
             error: err
-        })
+        }, 403)
     }
 })
 
 //get the count of p2pTransfer
-router.post("/p2pTransferCount", async(req:any, res: any)=>{
+dashboardRoute.post("/p2pTransferCount", async(c)=>{
     //get the token from the cookie
-    const token = req.cookies.token
-    
+    const token = getCookie(c, "token")
+    const JWT_SECRET = env(c).JWT_SECRET || "";
+
+    //prisma client
+    const client = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
+
     //incase of no token
     if(!token)
     {
-        return res.status(401).json({
+        return c.json({
             error: "Not authenticated!"
-        })
+        }, 401)
     }
 
     try{
-        const decoded = jwt.verify(token, JWT_SECRET) as{
+        const decoded = await verify(token, JWT_SECRET) as{
             id: number,
             name: string | null,
             email: string | null
@@ -140,19 +165,18 @@ router.post("/p2pTransferCount", async(req:any, res: any)=>{
         
         if(!p2p)
         {
-            return res.status(403).json({
+            return c.json({
                 message: "Invalid user id"
-            })
+            }, 403)
         }
-        return res.json({
+        return c.json({
             p2pCount: p2p.length
         })
     }catch(err)
     {
-        return res.status(403).json({
+        return c.json({
             message: "Invalid token",
             error: err
-        })
+        }, 403)
     }
 })
-export default router

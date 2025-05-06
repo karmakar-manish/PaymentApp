@@ -1,17 +1,20 @@
-import express from "express"
+import { Hono } from "hono";
 import zod from "zod"
-import { PrismaClient } from "@prisma/client"
-import jwt from "jsonwebtoken"
-import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client/edge"
+import { withAccelerate } from "@prisma/extension-accelerate";
+import {sign, verify} from "hono/jwt"
+import { env } from "hono/adapter"
 
-dotenv.config(); // Loads variables from .env into process.env
+export const signInRoute = new Hono<{
+    Bindings: {
+        DATABASE_URL: string,
+        JWT_SECRET: string
+    }
+}> ()
 
-const router = express.Router()
-const client = new PrismaClient()
-const JWT_SECRET = process.env.JWT_SECRET || ""
 
-router.get("/", (req: any,res: any)=>{
-    return res.json({
+signInRoute.get("/", async(c)=>{
+    return c.json({
         message: "Hi from signin route"
     })
 })
@@ -21,66 +24,77 @@ const phoneSchema = zod.object({
     number: zod.string().min(1),
     password: zod.string().min(1)
 })
-router.post("/phonePassword", async(req: any,res: any)=>{
 
-    const response = phoneSchema.safeParse(req.body)
+signInRoute.post("/phonePassword", async(c)=>{
+    //prisma client
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
+    const JWT_SECRET = env(c).JWT_SECRET || "";
+    console.log("jwt secret : ", JWT_SECRET);
+    
+    const body = await c.req.json() //get the body data
+
+    const response = phoneSchema.safeParse(body)
     
     //incase of no success
     if(!response.success)
     {
-        return res.status(411).json({
+        return c.json({
             error: "Invalid Username / Password",
             message: "Zod validation error"
-        })
+        }, 411)
     }
 
     let user;
     try{
         //find user from database
-        user = await client.user.findFirst({
+        user = await prisma.user.findFirst({
             where: {
                 AND: [
-                    {number: req.body.number},
-                    {password: req.body.password}
+                    {number: body.number},
+                    {password: body.password}
                 ]
             }
         })
         
     }
     catch(err){
-        return res.status(411).json({
+        return c.json({
             error: "Invalid Username / Password",
             message: "No user in database"
-        })
+        }, 411)
     }
 
     //incase no user is present in database
     if(!user)
     {
-        return res.status(411).json({
+        return c.json({
             error: "Invalid Username / Password",
             message: "No user in database"
-        })
+        }, 411)
     }
 
     //create a jwt token
-    const token = jwt.sign({
+    const token = await sign({
         id:user.id,
         secure: false,
         name: user.name,
         email: user.email
     }, JWT_SECRET)
 
-    //create cookie
-    res.cookie("token", token, {
-        httpOnly: true, // Prevents JavaScript from accessing the cookie
-        sameSite: "none",    //cross-site post/put/delete/fetch not allowed from different origin
-        secure: true,
-        maxAge: 24*60*60*1000,   //1 day
-        // path: "/"
-    })
+    //create a cookie
+    c.header("Set-Cookie", `token=${token};
+        HttpOnly;
+        Path=/;
+        Max-Age=86400;
+        SameSite=None;
+        Secure`
+    )
+    
 
-    return res.json({
+    return c.json({
         message: "Signed in successfully!"
     })
 })
@@ -92,23 +106,32 @@ const providerSchema = zod.object({
     displayName:zod.string().min(1)
 })
 
-router.post("/providerLogin", async(req:any, res:any)=>{
-    const response = providerSchema.safeParse(req.body)
+//Provider login2
+signInRoute.post("/providerLogin", async(c)=>{
+
+    //prisma client
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
+    const JWT_SECRET = env(c).JWT_SECRET || ""
+    const body = await c.req.json()
+    const response = providerSchema.safeParse(body)
 
     //incase of no success
     if(!response.success)
     {
-        return res.status(411).json({
+        return c.json({
             error: "Invalid provider details!",
             message: "Zod validation error"
-        })
+        }, 411)
     }
     
     try{
         //check if user is in database
-        const user = await client.user.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
-                uid: req.body.uid
+                uid: body.uid
             }
         })
         
@@ -116,35 +139,34 @@ router.post("/providerLogin", async(req:any, res:any)=>{
         if(user)
         {
             //create a jwt token
-            const token = jwt.sign({
+            const token = await sign({
                 id:user.id,
                 name: user.name,
                 email: user.email
             }, JWT_SECRET)
             
-            //create cookie
-            res.cookie("token", token, {
-                httpOnly: true, // Prevents JavaScript from accessing the cookie
-                sameSite: "none",    //cross-site post/put/delete/fetch not allowed from different origin
-                secure: true,
-                maxAge: 24*60*60*1000,   //1 day
-                // path: "/"
-            })
+            //create a cookie
+            c.header("Set-Cookie", `token=${token};
+                HttpOnly;
+                Path=/;
+                Max-Age=86400;
+                SameSite=None;
+                Secure`
+            )
 
-            return res.json({
+            return c.json({
                 message: "Signed in successfully!"
             })
         }
     }catch(err){
-        return res.status(411).json({
+        return c.json({
             error: "Invalid provider id",
             message: "No user in database"
-        })   
+        }, 411)   
     }
 
-    return res.status(411).json({
+    return c.json({
         error: "No user found",
         message:"Invalid provider id"
-    })
+    }, 411)
 })
-export default router;
