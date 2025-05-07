@@ -7,9 +7,6 @@
 	"name": "backend",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-05-06",
-	"observability": {
-		"enabled": true
-	},
 	"vars": {
 		"DATABASE_URL":"prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNGEwYzJiM2YtNDYxOC00ZTBjLThiY2ItYjhhNWE0YzBhNjEyIiwidGVuYW50X2lkIjoiYzI3NTQ1NGI3N2U4MjlmZGNlMGRhZTgyMzVhMmZiNDQzMTY3ODJiMTU1MjRiZjBjOTVkNDgwODA5NzU4MjU0ZiIsImludGVybmFsX3NlY3JldCI6IjllMmI1OTg2LTU2MWQtNDJlNy04OTQ4LWMzZjVkNWQ3YTc1MSJ9.tMl34ngMuLj9OcxNtw5dOpZRj3JgONxbCuJHvxzgubo",
 		"JWT_SECRET": "manishSecret"

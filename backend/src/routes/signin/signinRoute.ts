@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client/edge"
 import { withAccelerate } from "@prisma/extension-accelerate";
 import {sign, verify} from "hono/jwt"
 import { env } from "hono/adapter"
+import { setCookie } from "hono/cookie";
 
 export const signInRoute = new Hono<{
     Bindings: {
@@ -85,13 +86,13 @@ signInRoute.post("/phonePassword", async(c)=>{
     }, JWT_SECRET)
 
     //create a cookie
-    c.header("Set-Cookie", `token=${token};
-        HttpOnly;
-        Path=/;
-        Max-Age=86400;
-        SameSite=None;
-        Secure`
-    )
+    setCookie(c, "token", token, {
+        httpOnly: true,
+        path: "/",
+        maxAge: 86400,
+        sameSite: "None",
+        secure: true,
+    })
     
 
     return c.json({
@@ -109,6 +110,7 @@ const providerSchema = zod.object({
 //Provider login2
 signInRoute.post("/providerLogin", async(c)=>{
 
+    console.log("Provider login route");
     //prisma client
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
@@ -134,7 +136,7 @@ signInRoute.post("/providerLogin", async(c)=>{
                 uid: body.uid
             }
         })
-        
+        console.log("User is : ", user);
         //incase user is there
         if(user)
         {
@@ -145,20 +147,22 @@ signInRoute.post("/providerLogin", async(c)=>{
                 email: user.email
             }, JWT_SECRET)
             
+            
             //create a cookie
-            c.header("Set-Cookie", `token=${token};
-                HttpOnly;
-                Path=/;
-                Max-Age=86400;
-                SameSite=None;
-                Secure`
-            )
+            setCookie(c, "token", token, {
+                httpOnly: true,
+                path: "/",
+                maxAge: 86400,
+                sameSite: "None",
+                secure: true,
+            })
 
             return c.json({
                 message: "Signed in successfully!"
             })
         }
     }catch(err){
+        console.log("Error is : ", err)
         return c.json({
             error: "Invalid provider id",
             message: "No user in database"

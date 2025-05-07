@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client/edge"
 import { withAccelerate } from "@prisma/extension-accelerate"
 import {sign, verify} from "hono/jwt"
 import { env } from "hono/adapter"
+import { setCookie } from "hono/cookie"
 
 export const signUpRoute = new Hono<{
     Bindings: {
@@ -63,13 +64,13 @@ signUpRoute.post("/phonePassword", async(c)=>{
         }, JWT_SECRET)
         
        //create a cookie
-        c.header("Set-Cookie", `token=${token};
-            HttpOnly;
-            Path=/;
-            Max-Age=86400;
-            SameSite=None;
-            Secure`
-        )
+        setCookie(c, "token", token, {
+            httpOnly: true,
+            path: "/",
+            maxAge: 86400,
+            sameSite: "None",
+            secure: true,
+        })
 
         return c.json({
             message: "Signed up successfully!"
@@ -135,13 +136,13 @@ signUpRoute.post("/providerSignup", async(c)=>{
             }, JWT_SECRET)
         
             //create a cookie
-            c.header("Set-Cookie", `token=${token};
-                HttpOnly;
-                Path=/;
-                Max-Age=86400;
-                SameSite=None;
-                Secure`
-            )
+            setCookie(c, "token", token, {
+                httpOnly: true,
+                path: "/",
+                maxAge: 86400,
+                sameSite: "None",
+                secure: true,
+            })
 
             return c.json({
                 message: "Signed in successfully!"

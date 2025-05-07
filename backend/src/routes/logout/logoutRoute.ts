@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { setCookie } from "hono/cookie";
 
 export const logoutRoute = new Hono<{
     Bindings: {
@@ -12,14 +13,14 @@ export const logoutRoute = new Hono<{
 logoutRoute.post("/clearCookie", async(c)=>{
     
     //clear the cookie
-    c.header("Set-Cookie", 
-        `token=;
-        HttpOnly;
-        Path=/;
-        Max-Age=0;
-        SameSite=None;
-        Secure`
-    )
+    setCookie(c, "token", "", {
+        httpOnly: true,
+        path: "/",
+        maxAge: 0,
+        sameSite: "None",
+        secure: true,
+    })
+    
 
 
     return c.json({
