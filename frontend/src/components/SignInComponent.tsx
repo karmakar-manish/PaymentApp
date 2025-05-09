@@ -26,6 +26,8 @@ export default function (){
                 await axios.post(`${BACKEND_URL}/api/v1/signinRoute/phonePassword`, {
                     number, 
                     password
+                },{
+                    withCredentials: true
                 })
 
                 //navigate to dashboard
@@ -67,9 +69,12 @@ export default function (){
                             uid: res.user.uid,
                             email: res.user.email,
                             displayName: res.user.displayName
+                        }, {
+                            withCredentials: true
                         })
                          
                     }
+                    console.log("Navigating to dashboard")
                     //navigate to dashboard
                     navigate("/dashboard")
                 })
@@ -82,5 +87,9 @@ export default function (){
                 <span>Continue with Google</span>
             </div>
         </button>
+        <div className="flex justify-center text-sm font-semibold">
+            <p className="mr-2 text-slate-700">New User? </p>
+            <button className="text-blue-600 underline cursor-pointer" onClick={()=>{navigate("/signup")}}>Register now</button>
+        </div>
     </div>
 }

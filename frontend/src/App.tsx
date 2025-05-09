@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes,Route, Navigate } from 'react-router-dom'
 import Signin from "./pages/SignInPage"
+import Signup from "./pages/SignUpPage"
 import DashboardPage from './pages/DashboardPage'
 import P2pTransferPage from './pages/P2pTransferPage'
 import TransactionPage from './pages/TransactionPage'
 import TransferPage from './pages/TransferPage'
 import LayoutAfterSignin from './components/LayoutAfterSignin'
-
 import './App.css'
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Navigate to={"/signin"}/>}/>
         <Route path='/signin' element={<Signin/>}/>
+        <Route path='/signup' element={<Signup/>}/>
 
         <Route element={<LayoutAfterSignin/>}>
           <Route path='/dashboard' element={<DashboardPage/>}/>

@@ -1,10 +1,11 @@
-import { Hono } from "hono"
+import { Hono } from "hono";
 import zod from "zod"
 import { PrismaClient } from "@prisma/client/edge"
-import { withAccelerate } from "@prisma/extension-accelerate"
+import { withAccelerate } from "@prisma/extension-accelerate";
 import {sign, verify} from "hono/jwt"
 import { env } from "hono/adapter"
-import { setCookie } from "hono/cookie"
+import { setCookie } from "hono/cookie";
+
 
 export const signUpRoute = new Hono<{
     Bindings: {
@@ -24,7 +25,8 @@ signUpRoute.get("/", async(c)=>{
 //signup body schema
 const phoneSchema = zod.object({
     number: zod.string().min(10),
-    password: zod.string().min(1)
+    password: zod.string().min(1),
+    username: zod.string()
 })
 
 signUpRoute.post("/phonePassword", async(c)=>{
@@ -37,8 +39,9 @@ signUpRoute.post("/phonePassword", async(c)=>{
     const JWT_SECRET = env(c).JWT_SECRET || "";
 
     const body = await c.req.json() //get the body
+    console.log(body);
     const response = phoneSchema.safeParse(body)
-    
+    console.log("Response: ", response.success);
     //incase of no success
     if(!response.success)
     {
@@ -52,10 +55,18 @@ signUpRoute.post("/phonePassword", async(c)=>{
         const user = await client.user.create({
             data: {
                 number: body.number,
-                password: body.password
+                password: body.password,
+                name: body.username
             }
         })
-
+        // also create a balance entry 
+        const balance = await client.balance.create({
+            data: {
+                userId: user.id,
+                amount: 0,
+                locked: 0,
+            }
+        })
         //create a token
         const token = await sign({
             id: user.id,
@@ -93,8 +104,9 @@ const providerSchema = zod.object({
 
 //provider signup
 signUpRoute.post("/providerSignup", async(c)=>{
+    console.log("Provider signup route");
     //prisma client
-    const client = new PrismaClient({
+    const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
 
@@ -113,7 +125,7 @@ signUpRoute.post("/providerSignup", async(c)=>{
 
     try{
         //create a new user
-        const user = await client.user.create({
+        const user = await prisma.user.create({
             data:{
                 uid: body.uid,
                 email: body.email,
@@ -121,7 +133,7 @@ signUpRoute.post("/providerSignup", async(c)=>{
             }
         })
         // also create a balance entry 
-        const balance = await client.balance.create({
+        const balance = await prisma.balance.create({
             data: {
                 userId: user.id,
                 amount: 0,
@@ -129,28 +141,35 @@ signUpRoute.post("/providerSignup", async(c)=>{
             }
         })
         //create a jwt token
-            const token = await sign({
-                id:user.id,
-                name: user.name,
-                email: user.email
-            }, JWT_SECRET)
+        //create a jwt token
+        const token = await sign({
+            id:user.id,
+            name: user.name,
+            email: user.email
+        }, JWT_SECRET)
         
-            //create a cookie
-            setCookie(c, "token", token, {
-                httpOnly: true,
-                path: "/",
-                maxAge: 86400,
-                sameSite: "None",
-                secure: true,
-            })
+        
+        //create a cookie
+        setCookie(c, "token", token, {
+            httpOnly: true,
+            path: "/",
+            maxAge: 86400,
+            sameSite: "None",
+            secure: true,
+        })
 
-            return c.json({
-                message: "Signed in successfully!"
-            })
+        return c.json({
+            message: "Signed in successfully!"
+        })
     }catch(err){
+        console.log("Error while singup with provider");
         return c.json({
             message: "Error while signup with provider",
             error: err
         }, 411)
     }
+    
+    return c.json({
+        message:"New account created!"
+    })
 })

@@ -1,22 +1,24 @@
 import SignInComponent from "../components/SignInComponent"
-import backgroundImg from "../assets/signBackground.jpg"
+import wallpaper1 from "../assets/wallpaper1.jpg"
+import wallpaper2 from "../assets/wallpaper2.jpg"
+
 
 export default function(){
-    return <div className="bg-gray-700 min-h-screen p-2 lg:p-10 flex bg-center bg-cover" style={{backgroundImage: `url(${backgroundImg})`}}>
+    return <div className="bg-center bg-cover min-h-screen p-2 lg:p-10 flex" style={{backgroundImage: `url(${wallpaper2})`}}>
         <div className="bg-white border-white border-8 rounded-2xl w-full text-center gap-20 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
             {/* left container */}
-            <div className="bg-gray-400 rounded-2xl flex flex-col justify-end text-left p-10">
-                <div className="text-white font-[Open_Sans] text-5xl">
+            <div className="bg-cover xs:bg-center rounded-2xl flex flex-col justify-end text-left p-10 h-130 lg:min-h-full" style={{backgroundImage: `url(${wallpaper1})`}}>
+                <div className="text-slate-600 font-[Open_Sans] text-3xl md:text-4xl lg:text-5xl sm:pr-5 lg:p-0">
                     Get <br/>
                     Everything <br/>
                     You Want
                 </div>
-                <div className="text-white text-sm mt-4 ">
+                <div className="text-slate-500 text-sm mt-2 sm:w-xs">
                     Manage your payments effortlessly, wherever life takes you.
                 </div>
             </div>
             {/* right container  */}
-            <div className="h-full w-full flex justify-center  border-red-800">
+            <div className="h-full w-full flex justify-center">
                 <div className="flex flex-col justify-center w-sm p-10 rounded-xl">
                     <div className="text-center">
                         <div className="text-4xl font-serif text-slate-800">Welcome Back</div>
