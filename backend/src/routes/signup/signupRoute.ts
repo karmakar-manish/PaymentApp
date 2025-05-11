@@ -159,7 +159,7 @@ signUpRoute.post("/providerSignup", async(c)=>{
         })
 
         return c.json({
-            message: "Signed in successfully!"
+            message: "Signed-up successfully!"
         })
     }catch(err){
         console.log("Error while singup with provider");
@@ -169,7 +169,4 @@ signUpRoute.post("/providerSignup", async(c)=>{
         }, 411)
     }
     
-    return c.json({
-        message:"New account created!"
-    })
 })

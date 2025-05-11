@@ -74,6 +74,8 @@ export default function (){
                             uid: res.user.uid,
                             email: res.user.email,
                             displayName: res.user.displayName
+                        }, {
+                            withCredentials: true
                         })
                     }
                     //navigate to dashboard
