@@ -4,7 +4,7 @@ import wallpaper2 from "../assets/wallpaper7.jpg"
 export default function(){
     
 
-    return <div className="h-screen relative p-2 lg:p-10 flex flex-col justify-center overflow-hidden">
+    return <div className="h-screen relative p-2 lg:p-10 flex flex-col justify-center">
         <div
         className="absolute inset-0 bg-center bg-cover blur-sm scale-105"
         style={{ backgroundImage: `url(${wallpaper2})`, zIndex: -1 }}
