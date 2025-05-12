@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import avatarCat from "../assets/avatarCat.png"
 import profileIcon from "../assets/profile.png"
+import { useNavigate } from "react-router-dom"
 
 interface ButtonProps {
     onClick: () => void,
@@ -8,6 +9,8 @@ interface ButtonProps {
   
 export default function ProfileComponent({onClick}: ButtonProps){
     const [open, setOpen] = useState(false)
+    const navigate = useNavigate()
+
     //to access DOM elements
     const dropdownRef = useRef<HTMLDivElement | null>(null)
     const avatarRef = useRef<HTMLDivElement | null>(null)
@@ -44,7 +47,7 @@ export default function ProfileComponent({onClick}: ButtonProps){
                         <div>
                             <div className="flex  cursor-pointer hover:bg-gray-200 rounded-md pl-1">
                                 <img className=" w-10 h-10" src={profileIcon} alt="profile icon" />
-                                <button className="cursor-pointer text-left w-full h-10 mb-1  ">Profile</button>
+                                <button className="cursor-pointer text-left w-full h-10 mb-1" onClick={()=>navigate("/dashboard")}>Profile</button>
                             </div>
                             <div className="flex pl-2.5 justify-center cursor-pointer hover:bg-gray-200 rounded-md">
                                 <svg className="mt-2 ml-1 w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">

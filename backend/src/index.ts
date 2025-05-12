@@ -7,8 +7,8 @@ import {cors} from "hono/cors"
 const app = new Hono()
 
 app.use("/*", cors({
-    // origin: "http://localhost:5173",    //frontend url
-    origin: "https://paymentappmanish.netlify.app",
+    origin: "http://localhost:5173",    //frontend url
+    // origin: "https://paymentappmanish.netlify.app",
     credentials: true
 }))
 

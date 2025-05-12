@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { BACKEND_URL } from "../config"
+import TextInputComponent from "../components/TextInputComponent"
 
 interface BalanceResponse {
     balance: number
@@ -69,7 +70,7 @@ export default function(){
     }, [])
     
 
-    return <div className="w-screen">
+    return <div className="w-screen overflow-x-auto">
         <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold pl-4">Dashboard</div>
         <div className="flex justify-around mt-10 gap-1 ">
             
@@ -78,6 +79,7 @@ export default function(){
             <DashboardCard title={"P2P Transfer"} value={p2pCount}/>
 
         </div>
+        <UserComponent/>
     </div>
 }
 
@@ -97,3 +99,47 @@ function DashboardCard({title, value, sign = ""}: {
 
 }
 
+type UserDataType = {
+    name: string,
+    email: string,
+    number: string
+}
+function UserComponent(){
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("")
+    const [number, setNumber] = useState("")
+
+    useEffect(()=>{
+        async function getData(){
+            try{
+                const res = await axios.post<UserDataType>(`${BACKEND_URL}/api/v1/user/getUserData/getData`, {},
+                {withCredentials:true})
+
+                setName(res.data.name)
+                setEmail(res.data.email)
+                setNumber(res.data.number)
+
+            }catch(err)
+            {
+                console.log("Error from Dashboard page getuserData")
+            }            
+        }
+
+        getData()   //get user data
+
+    }, [])
+    console.log(name, " ", email, " ", number)
+    return <div className="mt-4 h-fit mb-10">
+            <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold pl-4">User Profile</div>
+            <div className="border rounded-lg p-10 md:w-sm lg:w-fit ml-4">
+                <div className="md:w-sm lg:w-md">
+                    <TextInputComponent label="Name" placeholder={name} onChange={()=>{}}/>
+                    <TextInputComponent readOnly={!!email} label="Email" placeholder={email} onChange={()=>{}}/>
+                    <TextInputComponent readOnly={!!number} type="tel" label="Phone" placeholder={number} onChange={()=>{}}/>
+                </div>
+                <button className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 me-2 mt-4">Edit Profile</button>
+
+                <button className="cursor-pointer text-slate-700 border border-slate-500 bg-white hover:bg-red-100 focus:outline-none font-medium  rounded-md text-sm px-5 py-2.5 me-2 mt-4">Change Password</button>
+            </div>
+        </div>
+}

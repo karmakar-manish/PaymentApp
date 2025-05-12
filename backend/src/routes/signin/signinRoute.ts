@@ -80,7 +80,6 @@ signInRoute.post("/phonePassword", async(c)=>{
     //create a jwt token
     const token = await sign({
         id:user.id,
-        secure: false,
         name: user.name,
         email: user.email
     }, JWT_SECRET)
