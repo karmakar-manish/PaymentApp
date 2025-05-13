@@ -121,7 +121,6 @@ function UserComponent(){
     const [name, setName] = useState("");
     const [email, setEmail] = useState("")
     const [number, setNumber] = useState("")
-    const [newNumber, setNewNumber] = useState("")
     const [emailError, setEmailError] = useState("")
     const [numberError, setNumberError] = useState("")
 
@@ -211,7 +210,6 @@ function UserComponent(){
                         setName(response.data.name)
                         setNumber(response.data.number)
                         setNumberError("")
-                        setNewNumber("")
                         alert("Profile updated successfully!")
                     }catch(err)
                     {
