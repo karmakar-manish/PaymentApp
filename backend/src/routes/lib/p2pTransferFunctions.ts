@@ -136,7 +136,7 @@ p2pTransferRoute.post("/transfer", async(c)=>{
         }
     
         //create a trasaction to maintain atomicity
-        await client.$transaction(async (tx: Prisma.TransactionClient) => {
+        await client.$transaction(async (tx) => {
             //we need to make sure only one db call is done here (LOCK)
             // Locks the selected row so that no one else can modify it until this transaction commits or rolls back.
             await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId"=${Number(senderId)} FOR UPDATE`;
@@ -164,7 +164,7 @@ p2pTransferRoute.post("/transfer", async(c)=>{
             }
 
             //reduce the balance of the sender
-            await tx.balance.updateMany({
+            await tx.balance.update({
                 where: {
                     userId: Number(senderId)
                 },
@@ -176,7 +176,7 @@ p2pTransferRoute.post("/transfer", async(c)=>{
             })
 
             //increase the balance of the receiver
-            await tx.balance.updateMany({
+            await tx.balance.update({
                 where: {
                     userId: Number(receiver.id)
                 },
@@ -188,7 +188,7 @@ p2pTransferRoute.post("/transfer", async(c)=>{
             })
 
             //update the p2pTransfer table
-            await client.p2pTransfer.create({
+            await tx.p2pTransfer.create({
                 data:{
                     amount: amount,
                     timestamp: new Date(),
@@ -203,6 +203,7 @@ p2pTransferRoute.post("/transfer", async(c)=>{
 
         }catch(err)
         {
+            console.log("Error: ", err);
             return c.json({
                 message: "Invalid token",
                 error: err
