@@ -103,7 +103,7 @@ export default function(){
             <div className="text-4xl text-[#6a51a6] pt-8 font-bold pl-4">Transactions</div>
                 
             <div className="p-5">
-                <div className="flex justify-around rounded-lg bg-[#e6e6e6] pt-10 pb-10 pr-3 pl-3">
+                <div className="flex justify-around rounded-lg bg-[#e6e6e6] pt-10 pb-10 pr-3 pl-3 border border-slate-300 shadow-md" >
                     
                     <BalanceInfo sign={"₹"} title={"Total Sent"} count={totalsent}/>
                     <BalanceInfo sign={"₹"} title={"Total Received"} count={totalReceived}/>

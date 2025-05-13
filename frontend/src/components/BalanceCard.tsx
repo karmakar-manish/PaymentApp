@@ -3,7 +3,7 @@ export default function BalanceCard({amount, locked}: {
     locked: number
 }){
     
-    return <div className="border p-6 rounded-xl bg-[#ededed]">
+    return <div className="shadow-xl border border-slate-400  p-6 rounded-xl bg-[#ededed]">
         <div className="text-xl border-b pb-2">Balance</div>
 
         <BalanceComponent title={"Unlocked Balance"} amount={amount/100}/>

@@ -50,7 +50,7 @@ export default function (){
         </div>
 
         <button className="cursor-pointer text-gray-700
-         bg-[#89888421] hover:bg-[#50454534] focus:outline-none focus:ring-4 focus:ring-gray-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 mt-2 w-full border border-[#bab4b4f0]" onClick={async(e)=>{
+         bg-[#898884b3] hover:bg-[#50454534] focus:outline-none focus:ring-4 focus:ring-gray-300 font-bold rounded-lg text-sm px-5 py-2.5 me-2 mb-2 mt-2 w-full border border-[#bab4b4f0]" onClick={async(e)=>{
             e.preventDefault()
             signInWithPopup(auth, provider)
                 .then(async(res)=>{

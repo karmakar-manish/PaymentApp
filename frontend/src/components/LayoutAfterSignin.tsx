@@ -39,13 +39,13 @@ export default function LayoutAfterSignin() {
       return <Navigate to="/signin" replace />
     }
     
-    return <div className="h-screen">
+    return <div className="h-fit bg-white">
       
         <AppbarClient/>
       
         <div className="flex overflow-hidden flex-1 min-h-screen">
-            <div className="w-60 border-r border-slate-300  mr-4 pt-16 bg-[#e1dbf0]">
-                <div className="p-2 pl-5 gap-2 flex flex-col">
+            <div className="w-65 shadow-lg border-r border-slate-300 mr-4 pt-16 bg-[#DBE2EF]">
+                <div className=" p-2 pl-5 gap-2 flex flex-col">
                     <SideBarItem href={"/dashboard"} icon={<HomeIcon/>} title={"Home"}/>
                     <SideBarItem href={"/transfer"} icon={<TransferIcon/>} title={"Wallet Top-up"}/>
                     <SideBarItem href={"/transactions"} icon={<TransactionIcon/>} title={"Transactions"}/>

@@ -13,7 +13,7 @@ export default function P2pTransactions({transactions}: {
     //incase of no transactions
     if(!transactions.length)
     {
-        return <div className="border p-6 rounded-xl bg-[#ededed]">
+        return <div className="shadow-xl border border-slate-400  p-6 rounded-xl bg-[#ededed]">
             <div className="text-xl border-b pb-2">
                 Recent Transactions
             </div>
@@ -23,7 +23,7 @@ export default function P2pTransactions({transactions}: {
         </div>
     }
 
-    return <div className="border h-120 overflow-y-auto p-6 rounded-xl bg-[#ededed]">
+    return <div className="shadow-xl border border-slate-400  h-120 overflow-y-auto p-6 rounded-xl bg-[#ededed]">
             <div className="text-xl border-b pb-2">
                 Recent Transactions
             </div>

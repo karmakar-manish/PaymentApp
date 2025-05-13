@@ -9,14 +9,14 @@ export default function OnRampTransactions({transactions}: {
     //incase of no transactions
     if(!transactions.length)
     {
-        return <div className="border p-6 rounded-xl bg-[#ededed]">
+        return <div className="shadow-xl border border-slate-400  p-6 rounded-xl bg-[#ededed]">
             <div className="text-xl border-b pb-2">Recent Transactions</div>
             <div className="text-center pb-8 pt-8">No Recent Transactions</div>
         </div>
     }
 
     //incase the user has transactions
-    return <div className="border p-6 rounded-xl bg-[#ededed] overflow-x-auto h-80">
+    return <div className="shadow-xl border border-slate-400  p-6 rounded-xl bg-[#ededed] overflow-x-auto h-80">
         <div className=" text-xl border-b pb-2">Recent Transactions</div>
         <div className="pt-2">
             {transactions.map(t => <TransactionCard key={t.time} time={t.time} amount={t.amount}/>)}

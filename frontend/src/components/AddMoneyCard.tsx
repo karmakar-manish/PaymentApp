@@ -20,8 +20,8 @@ export function AddMoney(){
     const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name)
     const navigate = useNavigate()
 
-    return <div className="border p-6 rounded-xl bg-[#ededed]">
-        <div className="text-xl border-b pb-2">Add Money</div>
+    return <div className="shadow-xl border border-slate-400 p-6 rounded-xl bg-[#ededed]">
+        <div className="text-xl border-b pb-2 mb-4">Add Money</div>
         <div>
             <TextInputComponent label="Amount" placeholder="Amount" onChange={(e)=>{
                 setAmount(e)

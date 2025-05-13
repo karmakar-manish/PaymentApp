@@ -11,7 +11,7 @@ export default function(){
     const navigate = useNavigate()
 
     return  <div className="">
-                <div className=" p-10 bg-[#e6e6e6] h-80  rounded-lg border">
+                <div className=" p-10 bg-[#e6e6e6] h-80  rounded-lg shadow-xl border border-slate-400 ">
                     <div className="border-b border-slate-300 text-xl pb-2 mb-2">
                         Send
                     </div >
